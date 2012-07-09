@@ -36,6 +36,7 @@
     NSNumber* operandObject = [self.operandStack lastObject];
     if (operandObject) [self.operandStack removeLastObject];
     return [operandObject doubleValue];
+    // nonsense comment
 }
 
 - (double) performOperation:(NSString *) operation
