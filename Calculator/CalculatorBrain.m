@@ -35,8 +35,8 @@
 {
     NSNumber* operandObject = [self.operandStack lastObject];
     if (operandObject) [self.operandStack removeLastObject];
+    NSLog(@"popOperand value object = %@, doubleValue = %g", operandObject, [operandObject doubleValue]); 
     return [operandObject doubleValue];
-    // nonsense comment
 }
 
 - (double) performOperation:(NSString *) operation
@@ -46,6 +46,12 @@
         result = [self popOperand] + [self popOperand];
     } else if ([@"*" isEqualToString:operation]) {
         result = [self popOperand] * [self popOperand];
+    } else if ([@"/" isEqualToString:operation]) {
+        double devidor = [self popOperand];   
+        result = [self popOperand] / devidor;
+    } else if ([@"-" isEqualToString:operation]) {
+        double subtractor = [self popOperand];
+        result = [self popOperand] - subtractor;
     } else if ([operation isEqualToString:@"PI"]) {
         result = M_PI;
     } else if ([operation isEqualToString:@"sin"]) {
@@ -60,4 +66,7 @@
     return result;
 }
 
+- (void) clearAll {
+    self.operandStack = nil;
+}
 @end
