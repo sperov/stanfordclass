@@ -57,7 +57,8 @@
     }
     // populate the Label with the digit pressed 
     
-    self.displayInput.text = [NSString stringWithFormat:@"%@ %@", self.displayInput.text, self.display.text];
+    //self.displayInput.text = [NSString stringWithFormat:@"%@ %@", self.displayInput.text, self.display.text];
+    self.displayInput.text = [CalculatorBrain descriptionOfProgram:self.brain.program];
     self.userIsInTheMiddleOfEnteringANumber = NO;
     self.userHasEnteredDotAlready = NO;
 
@@ -67,7 +68,8 @@
     if (self.userIsInTheMiddleOfEnteringANumber) [self enterPressed];
     double result = [self.brain performOperation:sender.currentTitle];
     NSString* resultString = [NSString stringWithFormat:@"%g", result];
-    self.displayInput.text = [NSString stringWithFormat:@"%@ %@",self.displayInput.text, sender.currentTitle];
+    //self.displayInput.text = [NSString stringWithFormat:@"%@ %@",self.displayInput.text, sender.currentTitle];
+    self.displayInput.text = [CalculatorBrain descriptionOfProgram:self.brain.program];
     self.display.text = resultString;
 }
 - (IBAction)clearSequence:(UIButton *)sender {
