@@ -10,21 +10,22 @@
 
 @interface CalculatorBrain()
 
+// private propreties
 @property (nonatomic, strong) NSMutableArray* programStack;
+
+// private methods
 
 + (BOOL) isOperation: (NSString* ) operation;
 + (BOOL) isDoubleOperation : (NSString*) operation;
 + (BOOL) isSingleOperation : (NSString*) operation;
 + (BOOL) isZeroOperation : (NSString*) operation;
 + (double) popOperandOffStack:(NSMutableArray*) stack;
-+ (NSString* ) descriptionOfProgram:(id)program;
 + (NSString* ) descriptionOfTopOfStack:(NSMutableArray*) stack;
-
++ (NSString* ) supressParenthesis:(NSString*) operand;
 
 @end
 
 @implementation CalculatorBrain
-
 
 @synthesize programStack = _programStack;
 
@@ -34,10 +35,14 @@
     return _programStack;
 }
 
-- (void) pushOperand:(double)operand
+- (id) program {
+    return [self.programStack copy];
+}
 
+- (void) pushOperand:(id)operand
 {
-    [self.programStack addObject:[NSNumber numberWithDouble:operand]];
+    if ([operand isKindOfClass:[NSNumber class]] || [operand isKindOfClass:[NSString class]])
+        [self.programStack addObject:operand];
 }
 
 - (double) performOperation:(NSString *) operation
@@ -46,11 +51,19 @@
     return [CalculatorBrain runProgram:self.program];
 }
 
-- (id) program {
-    return [self.programStack copy];
+- (double) performOperation:(NSString *)operation 
+            usingVariableValue:(NSDictionary *)variableValues
+{
+    [self.programStack addObject:operation];
+    return [CalculatorBrain runProgram:self.program 
+                    usingVariableValue:variableValues];
+                                           
 }
 
-    
+- (void) clearAll {
+    self.programStack = nil;
+}
+
 + (double) runProgram:(id)program {
     NSMutableArray* stack;
     if ([program isKindOfClass:[NSArray class]]) {
@@ -76,14 +89,20 @@
         stack = [program mutableCopy];
     }
     id currentObject; 
+    NSNumber* variableValue;
     for (int arrayIndex = 0; arrayIndex < [stack count]; arrayIndex++) {
         currentObject = [stack objectAtIndex:arrayIndex];
-        // replace all variables that are not defined with 0;
+        
         if ([currentObject isKindOfClass:[NSString class]] && ![self isOperation:currentObject]) {
-            if (![variableValues objectForKey:currentObject])
+            variableValue = [NSNumber numberWithDouble:[[variableValues objectForKey:currentObject] doubleValue]];
+            if (!variableValue) {
                 [stack replaceObjectAtIndex:arrayIndex withObject:[NSNumber numberWithDouble:0]];
+            } else {
+                [stack replaceObjectAtIndex:arrayIndex withObject:variableValue];
+            }
         }
     }
+
     return [self popOperandOffStack:stack];    
 }
 
@@ -102,7 +121,7 @@
 
 
 + (NSSet *) variablesUsedInProgram: (id) program {
-    NSMutableSet* variableNames;
+    NSMutableSet* variableNames = [[NSMutableSet alloc] init];
     if ([program isKindOfClass:[NSArray class]]) {
         id currentObject; 
         for (int arrayIndex = 0; arrayIndex < [program count]; arrayIndex++) {
@@ -112,6 +131,10 @@
         }
     }
     return [variableNames copy];
+}
+
++ (NSString* ) getLastDisplayValue:(id)program usingVariableValue:(NSDictionary*) variableValues {
+    return [NSString stringWithFormat:@"%g", [self runProgram:program usingVariableValue:variableValues]];
 }
 
 + (BOOL) isOperation:(NSString*) operation {
@@ -148,7 +171,10 @@
     if ([topOfStack isKindOfClass:[NSString class]]) {
         NSString* operation = topOfStack;
         if ([operation isEqualToString:@"+"]) {
-            result = [self popOperandOffStack:stack] + [self popOperandOffStack:stack];
+            double testvalue1 = [self popOperandOffStack:stack];
+            double testvalue2 = [self popOperandOffStack:stack];
+            result = testvalue1 + testvalue2;
+            //result = [self popOperandOffStack:stack] + [self popOperandOffStack:stack];
         } else if ([@"*" isEqualToString:operation]) {
             result = [self popOperandOffStack:stack] * [self popOperandOffStack:stack];
         } else if ([@"/" isEqualToString:operation]) {
@@ -176,7 +202,7 @@
 }
 
 + (NSString* ) descriptionOfTopOfStack:(NSMutableArray*) stack
-            {
+{
     NSString* result = @"0";
     
     id topOfStack = [stack lastObject];
@@ -196,19 +222,30 @@
             if ([operation isEqualToString:@"*"] || [operation isEqualToString:@"/"]) {
                 result = [NSString stringWithFormat:@"%@ %@ %@", firstOperand, operation, secondOperand];
             } else {
+                firstOperand = [CalculatorBrain supressParenthesis:firstOperand];
+                secondOperand = [CalculatorBrain supressParenthesis:secondOperand];
                 result = [NSString stringWithFormat:@"(%@ %@ %@)", firstOperand, operation, secondOperand];  
             }
         } else if ([self isSingleOperation:operation]) {
             result = [NSString stringWithFormat:@"%@(%@)", operation, [self descriptionOfTopOfStack:stack]];
         } else if ([self isZeroOperation:operation]) {
             result = operation;
+        } else {
+            result = operation; //show variable
         }
     }
     
     return result;
 }
 
-- (void) clearAll {
-    self.programStack = nil;
++ (NSString*) supressParenthesis:(NSString*) operand {
+    if ([operand hasPrefix:@"("] && [operand hasSuffix:@")"]) {
+        NSRange noParenthesisRange; 
+        noParenthesisRange.location = 1;
+        noParenthesisRange.length = [operand length] - 2 ;  
+        operand = [operand substringWithRange:noParenthesisRange];  
+    }
+    return operand; 
 }
+
 @end
