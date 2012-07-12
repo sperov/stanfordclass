@@ -61,7 +61,8 @@
 }
 
 - (void) clearAll {
-    self.programStack = nil;
+    // self.programStack = nil;
+    [self.programStack removeAllObjects];
 }
 
 + (double) runProgram:(id)program {
@@ -113,7 +114,7 @@
         stack = [program mutableCopy];
     }
     result = [self descriptionOfTopOfStack:stack];
-    while ([stack lastObject]) {
+    while ([stack count]) {
         result = [NSString stringWithFormat:@"%@, %@", result, [self descriptionOfTopOfStack:stack]];
     }
     return result;
@@ -138,7 +139,7 @@
 }
 
 + (BOOL) isOperation:(NSString*) operation {
-    NSSet* operations = [NSSet setWithObjects:@"+", @"-", @"*", @"/", @"sqrt", @"PI", nil];
+    NSSet* operations = [NSSet setWithObjects:@"+", @"-", @"*", @"/", @"sqrt", @"PI",@"sin", @"cos", nil];
     return [operations containsObject:operation];
 }
 
@@ -227,7 +228,9 @@
                 result = [NSString stringWithFormat:@"(%@ %@ %@)", firstOperand, operation, secondOperand];  
             }
         } else if ([self isSingleOperation:operation]) {
-            result = [NSString stringWithFormat:@"%@(%@)", operation, [self descriptionOfTopOfStack:stack]];
+            NSString* operand = [self descriptionOfTopOfStack:stack];
+            operand = [CalculatorBrain supressParenthesis:operand];
+            result = [NSString stringWithFormat:@"%@(%@)", operation, operand];
         } else if ([self isZeroOperation:operation]) {
             result = operation;
         } else {
