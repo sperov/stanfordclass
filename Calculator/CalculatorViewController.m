@@ -8,6 +8,7 @@
 
 #import "CalculatorViewController.h"
 #import "CalculatorBrain.h"
+#import "GraphViewController.h"
 
 @interface CalculatorViewController ()
 
@@ -124,8 +125,7 @@
     }
     
     if (self.userIsInTheMiddleOfEnteringANumber) 
-    {
-        self.display.text = [self.display.text stringByAppendingString:digit];
+    {           self.display.text = [self.display.text stringByAppendingString:digit];
     } else {
         self.display.text = digit; 
         self.userIsInTheMiddleOfEnteringANumber = YES; 
@@ -180,4 +180,12 @@
     self.userHasEnteredDotAlready = NO;
 }
 
+
+- (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"Graph"]) {
+        NSMutableArray* runProgramResults = [[NSMutableArray alloc] initWithCapacity:1]; // try it with 1 point only first
+        [runProgramResults addObject:[NSNumber numberWithDouble:[CalculatorBrain runProgram:self.brain.program usingVariableValue:self.testVariableValues]]]; 
+        [segue.destinationViewController setProgram:self.brain.program];
+    }
+}
 @end

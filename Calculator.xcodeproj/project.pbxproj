@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A170099015B0EF50003AAD3D /* GraphViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A170098F15B0EF50003AAD3D /* GraphViewController.m */; };
+		A170099315B0F0B7003AAD3D /* GraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = A170099215B0F0B7003AAD3D /* GraphView.m */; };
+		A170099615B15505003AAD3D /* AxesDrawer.m in Sources */ = {isa = PBXBuildFile; fileRef = A170099515B15505003AAD3D /* AxesDrawer.m */; };
 		A1EC30E315A69DBB00CEB084 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1EC30E215A69DBB00CEB084 /* UIKit.framework */; };
 		A1EC30E515A69DBB00CEB084 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1EC30E415A69DBB00CEB084 /* Foundation.framework */; };
 		A1EC30E715A69DBB00CEB084 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1EC30E615A69DBB00CEB084 /* CoreGraphics.framework */; };
@@ -19,6 +22,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A170098E15B0EF50003AAD3D /* GraphViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GraphViewController.h; path = ../GraphViewController.h; sourceTree = "<group>"; };
+		A170098F15B0EF50003AAD3D /* GraphViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GraphViewController.m; path = ../GraphViewController.m; sourceTree = "<group>"; };
+		A170099115B0F0B7003AAD3D /* GraphView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphView.h; sourceTree = "<group>"; };
+		A170099215B0F0B7003AAD3D /* GraphView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GraphView.m; sourceTree = "<group>"; };
+		A170099415B15505003AAD3D /* AxesDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AxesDrawer.h; sourceTree = "<group>"; };
+		A170099515B15505003AAD3D /* AxesDrawer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AxesDrawer.m; sourceTree = "<group>"; };
 		A1EC30DE15A69DBB00CEB084 /* Calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Calculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1EC30E215A69DBB00CEB084 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		A1EC30E415A69DBB00CEB084 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -80,6 +89,12 @@
 		A1EC30E815A69DBB00CEB084 /* Calculator */ = {
 			isa = PBXGroup;
 			children = (
+				A170099415B15505003AAD3D /* AxesDrawer.h */,
+				A170099515B15505003AAD3D /* AxesDrawer.m */,
+				A170098E15B0EF50003AAD3D /* GraphViewController.h */,
+				A170098F15B0EF50003AAD3D /* GraphViewController.m */,
+				A170099115B0F0B7003AAD3D /* GraphView.h */,
+				A170099215B0F0B7003AAD3D /* GraphView.m */,
 				A1EC30F115A69DBB00CEB084 /* CalculatorAppDelegate.h */,
 				A1EC30F215A69DBB00CEB084 /* CalculatorAppDelegate.m */,
 				A1EC30F415A69DBB00CEB084 /* MainStoryboard.storyboard */,
@@ -170,6 +185,9 @@
 				A1EC30F315A69DBB00CEB084 /* CalculatorAppDelegate.m in Sources */,
 				A1EC30F915A69DBB00CEB084 /* CalculatorViewController.m in Sources */,
 				A1EC310115A6B5E400CEB084 /* CalculatorBrain.m in Sources */,
+				A170099015B0EF50003AAD3D /* GraphViewController.m in Sources */,
+				A170099315B0F0B7003AAD3D /* GraphView.m in Sources */,
+				A170099615B15505003AAD3D /* AxesDrawer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,6 +299,7 @@
 				A1EC30FE15A69DBB00CEB084 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
