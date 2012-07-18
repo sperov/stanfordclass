@@ -173,6 +173,7 @@
 - (IBAction)clearAll:(UIButton*)sender {
 
     [self.brain clearAll]; // clear the array
+    [[self splitViewGraphViewController] setProgram:self.brain.program]; // clean the graph too
     self.displayInput.text = @""; // clear the displays
     self.display.text = @"0"; // clear the displays
     // clear state variables
@@ -183,9 +184,27 @@
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"Graph"]) {
-        NSMutableArray* runProgramResults = [[NSMutableArray alloc] initWithCapacity:1]; // try it with 1 point only first
-        [runProgramResults addObject:[NSNumber numberWithDouble:[CalculatorBrain runProgram:self.brain.program usingVariableValue:self.testVariableValues]]]; 
+        // NSMutableArray* runProgramResults = [[NSMutableArray alloc] initWithCapacity:1]; // try it with 1 point only first
+        // [runProgramResults addObject:[NSNumber numberWithDouble:[CalculatorBrain runProgram:self.brain.program usingVariableValue:self.testVariableValues]]]; 
         [segue.destinationViewController setProgram:self.brain.program];
-    }
+    }   
 }
+
+- (GraphViewController *) splitViewGraphViewController {
+    id svc = [self.splitViewController.viewControllers lastObject];
+    if (![svc isKindOfClass:[GraphViewController class]]) {
+        svc = nil;
+    }
+    return svc;
+}
+
+- (IBAction)graphPressed:(id)sender {
+    [[self splitViewGraphViewController] setProgram:self.brain.program];
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return YES;
+}
+
 @end

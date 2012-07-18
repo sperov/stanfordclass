@@ -35,21 +35,30 @@
 #define DEFAULT_SCALE 1
 
 - (CGFloat) scale { 
-    if (!_scale) return DEFAULT_SCALE;
+    if (!_scale) {
+        return [[NSUserDefaults standardUserDefaults] doubleForKey:@"scale"] ? [[NSUserDefaults standardUserDefaults] doubleForKey:@"scale"] : DEFAULT_SCALE;
+    }
     return _scale;
 }
 
 - (void) setScale:(CGFloat)scale {
     if (_scale != scale) {
         _scale = scale;
+        [[NSUserDefaults standardUserDefaults] setDouble:scale forKey:@"scale"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
         [self setNeedsDisplay];   
+        
     }
 }
 
 - (CGPoint) origin {
     if (!_origin.x && !_origin.y) {
-        _origin.x = self.bounds.origin.x + self.bounds.size.width/2;
-        _origin.y = self.bounds.origin.y + self.bounds.size.height/2;
+        _origin.x = [[NSUserDefaults standardUserDefaults] doubleForKey:@"xorigin"];
+        _origin.y = [[NSUserDefaults standardUserDefaults] doubleForKey:@"yorigin"];
+        
+        if (!_origin.x) _origin.x = self.bounds.origin.x + self.bounds.size.width/2;
+        if (!_origin.y) _origin.y = self.bounds.origin.y + self.bounds.size.width/2;
+        
         return _origin;
     }
     return _origin;
@@ -58,6 +67,10 @@
 - (void) setOrigin:(CGPoint) origin {
     if (!CGPointEqualToPoint(origin, _origin)) {
         _origin = origin;
+        [[NSUserDefaults standardUserDefaults] setDouble:_origin.x forKey:@"xorigin"];
+        [[NSUserDefaults standardUserDefaults] setDouble:_origin.y forKey:@"yorigin"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
         [self setNeedsDisplay];
     }
 }
@@ -91,7 +104,7 @@
     if (gesture.state == UIGestureRecognizerStateEnded ) {
        self.origin = [gesture locationInView:self];        
     }
-}
+}   
 
 - (void)drawRect:(CGRect)rect
 {

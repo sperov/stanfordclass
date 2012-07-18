@@ -13,12 +13,29 @@
 @interface GraphViewController () <GraphViewDataSource>
 @property (nonatomic, weak) IBOutlet GraphView* graphView; 
 @property (nonatomic, weak) IBOutlet UILabel *graphDescription;
+@property (nonatomic, strong) UIBarButtonItem* splitViewBarButtonItem;
+@property (nonatomic, weak) IBOutlet UIToolbar *toolbar;
 @end
 
 @implementation GraphViewController
 @synthesize program = _program;
 @synthesize graphView = _graphView;
 @synthesize graphDescription = _graphDescription;
+@synthesize splitViewBarButtonItem = _splitViewBarButtonItem;
+@synthesize toolbar = _toolbar;
+
+
+- (void) awakeFromNib {
+    [super awakeFromNib];
+    self.splitViewController.delegate = self;
+}
+
+- (void) setProgram:(NSArray *)program {
+    if(_program != program) {
+        _program = program;
+    }
+    [self.graphView setNeedsDisplay];
+}
 
 - (void) setGraphView:(GraphView*) graphView {
     _graphView = graphView;
@@ -32,20 +49,49 @@
     self.graphDescription.text = [CalculatorBrain descriptionOfProgram:self.program]; // is this legit to be calling model class method from another controller
 }
 
+
 - (CGFloat) getProgramValue:(CGFloat) xValue {
     
     NSDictionary* xVariableValue = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%f", xValue], @"x",nil];
     return [CalculatorBrain runProgram:self.program usingVariableValue:xVariableValue]; // need to add coordinates conversion
 }
 
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
 }
 
-- (void)viewDidUnload {
-    [self setGraphDescription:nil];
-    [super viewDidUnload]; 
+- (void) setSplitViewBarButtonItem:(UIBarButtonItem *)splitViewBarButtonItem {
+    if (_splitViewBarButtonItem != splitViewBarButtonItem ) {
+        NSMutableArray* toolbarItems = [self.toolbar.items mutableCopy];
+        if (_splitViewBarButtonItem) [toolbarItems removeObject:_splitViewBarButtonItem];
+        if (splitViewBarButtonItem) [toolbarItems insertObject:splitViewBarButtonItem atIndex:0];
+        self.toolbar.items = toolbarItems; 
+        _splitViewBarButtonItem = splitViewBarButtonItem;
+    }
 }
+
+- (BOOL) splitViewController:(UISplitViewController *) svc 
+    shouldHideViewController:(UIViewController* )vc 
+               inOrientation:(UIInterfaceOrientation)orientation {
+    return UIInterfaceOrientationIsPortrait(orientation);
+}
+
+- (void) splitViewController:(UISplitViewController*) svc 
+      willHideViewController:(UIViewController *)aViewController 
+           withBarButtonItem:(UIBarButtonItem *)barButtonItem 
+        forPopoverController:(UIPopoverController *)pc
+{
+  //  id calcViewController = [self.splitViewController.viewControllers objectAtIndex:0];
+    barButtonItem.title = @"Calculator";
+    self.splitViewBarButtonItem = barButtonItem;
+
+}
+
+- (void) splitViewController:(UISplitViewController *)svc willShowViewController:(UIViewController *)aViewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem {
+    
+    self.splitViewBarButtonItem = nil;
+
+}
+
 @end
